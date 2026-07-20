@@ -81,7 +81,7 @@ function toWords(number: number | string, asOrdinal?: boolean): string {
 
 function generateWords(number: number, words?: string[]): string {
   let remainder: number;
-  let word: string;
+  let word: string = "";
 
   if (!words) {
     words = [];
