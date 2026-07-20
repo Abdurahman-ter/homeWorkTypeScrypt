@@ -1,3 +1,7 @@
+const makeOrdinal = require('./makeOrdinal');
+const isFinite = require('./isFinite');
+const isSafeNumber = require('./isSafeNumber');
+
 const TEN = 10;
 const ONE_HUNDRED = 100;
 const ONE_THOUSAND = 1000;
@@ -66,14 +70,13 @@ function toWords(number: number | string, asOrdinal?: boolean): string {
       "Not a finite number: " + number + " (" + typeof number + ")",
     );
   }
-  if (!Number.isSafeInteger(num)) {
+  if (!isSafeNumber(num)) {
     throw new RangeError(
       "Input is not a safe number, it’s either too large or too small.",
     );
   }
   words = generateWords(num);
-//   return asOrdinal ? makeOrdinal(words) : words;
-  return words;
+  return asOrdinal ? makeOrdinal(words) : words;
 }
 
 function generateWords(number: number, words?: string[]): string {
@@ -125,9 +128,7 @@ function generateWords(number: number, words?: string[]): string {
     remainder = number % ONE_QUADRILLION;
     word =
       generateWords(Math.floor(number / ONE_QUADRILLION)) + " quadrillion,";
-  } else {
-    throw new Error("params indefiend");
-}
+  } 
 
   words.push(word);
   return generateWords(remainder, words);
