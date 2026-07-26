@@ -107,4 +107,4 @@ async function getUsers() {
   }
 }
 
-console.log(getUsers())
+getUsers().then(data => console.log(data))
