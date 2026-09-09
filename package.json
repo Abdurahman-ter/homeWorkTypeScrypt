@@ -1,0 +1,21 @@
+{
+  "name": "homeworkstypescript",
+  "version": "1.0.0",
+  "description": "// my repo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abdurahman-ter/homeWorkTypeScrypt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Abdurahman-ter/homeWorkTypeScrypt/issues"
+  },
+  "homepage": "https://github.com/Abdurahman-ter/homeWorkTypeScrypt#readme"
+}
