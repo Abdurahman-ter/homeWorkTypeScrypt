@@ -1,35 +1,32 @@
 class User {
   @allowFunc((a: number) => a > 0)
-  age!: number;
+  age: number = 30;
 }
 
 function allowFunc(func: Function) {
     return (
         target: object,
-        properityKey: string,
+        propertyKey: string,
     ) => {
-        let value!: number;
+        const privateKey = Symbol(`_${propertyKey}`);
 
-        Object.defineProperty(target, properityKey, {
+        Object.defineProperty(target, propertyKey, {
             set(num: number) {
                 if(func(num)) {
-                    value = num
+                    this[privateKey] = num
                 } else {
                     return
                 }
             },
 
             get() {
-                return value
+                return this[privateKey]
             }
         })
     }
 }
 
 const person = new User();
-console.log(person.age); // 30
-
-person.age = 30;
 console.log(person.age); // 30
 
 person.age = 0;
