@@ -1,11 +1,16 @@
 const url: string = "https://dummyjson.com/products/1"
 
+interface IProduct {
+    id: number;
+    [key: string]: unknown; // для остальных полей объекта
+}
+
 interface IAPISend {
-    getFetch(url: string): object;
+    getFetch(url: string): Promise<IProduct | undefined>;
 }
 
 class API implements IAPISend {
-    async getFetch(url: string): Promise<object> {
+    async getFetch(url: string): Promise<IProduct> {
         const res = await fetch(url)
 
         const data = await res.json()
@@ -14,16 +19,16 @@ class API implements IAPISend {
 }
 
 class APIProxy implements IAPISend {
-    async getFetch(url: string): Promise<object | undefined> {
-        const res = await fetch(url)
+    constructor(private Api: IAPISend) {};
 
-        const data = await res.json()
-        if(data.id > 10) {
-            return data
+    async getFetch(url: string): Promise<IProduct | undefined> {
+        const data2 = await this.Api.getFetch(url)
+        if(data2!.id > 10) {
+            throw new Error("айди больше 10")
         } else {
-            throw new Error("айди меньше 10")
+            return data2
         }
     }
 }
 
-console.log(new APIProxy().getFetch(url))
+console.log(new APIProxy(new API).getFetch(url))
