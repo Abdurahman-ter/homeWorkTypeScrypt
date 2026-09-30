@@ -23,7 +23,7 @@ class APIProxy implements IAPISend {
 
     async getFetch(url: string): Promise<IProduct | undefined> {
         const data2 = await this.Api.getFetch(url)
-        if(data2!.id > 10) {
+        if(data2!.id < 10) {
             throw new Error("айди больше 10")
         } else {
             return data2
@@ -31,4 +31,5 @@ class APIProxy implements IAPISend {
     }
 }
 
-console.log(new APIProxy(new API).getFetch(url))
+const myApi = new APIProxy(new API)
+console.log(myApi.getFetch(url))
