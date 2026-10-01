@@ -1,35 +1,47 @@
-const url: string = "https://dummyjson.com/products/1"
+const url: string = "https://dummyjson.com/products/1";
+
+interface IProductAPI {
+	getProduct(id: number): Promise<IProduct>;
+}
 
 interface IProduct {
-    id: number;
-    [key: string]: unknown; // для остальных полей объекта
+	id: number;
+	[key: string]: unknown; // для остальных полей объекта
 }
 
 interface IAPISend {
-    getFetch(url: string): Promise<IProduct | undefined>;
+	getFetch(url: string): Promise<IProduct | undefined>;
 }
 
-class API implements IAPISend {
-    async getFetch(url: string): Promise<IProduct> {
-        const res = await fetch(url)
+class API implements IProductAPI {
+	async getProduct(id: number): Promise<IProduct> {
+		const res = await fetch(`https://dummyjson.com/products/${id}`);
+		return res.json() as Promise<IProduct>;
+	}
+}
 
-        const data = await res.json()
-        return data
+class APIProxy implements IProductAPI {
+	constructor(private api: IProductAPI) {}
+
+	async getProduct(id: number): Promise<IProduct> {
+		if (id >= 10) {
+			throw new Error(`id ${id} должен быть меньше 10`);
+		}
+		return this.api.getProduct(id); // запрос уходит только после проверки
+	}
+}
+
+const proxy = new APIProxy(new API)
+
+async function main(): Promise<void> {
+    try {
+        const data = await proxy.getProduct(3)
+        console.log(data)
+
+        await proxy.getProduct(15)
+    } catch (error) {
+        console.log(error instanceof Error ? error.message : error)
     }
 }
 
-class APIProxy implements IAPISend {
-    constructor(private Api: IAPISend) {};
-
-    async getFetch(url: string): Promise<IProduct | undefined> {
-        const data2 = await this.Api.getFetch(url)
-        if(data2!.id < 10) {
-            throw new Error("айди больше 10")
-        } else {
-            return data2
-        }
-    }
-}
-
-const myApi = new APIProxy(new API)
-console.log(myApi.getFetch(url))
+main()
